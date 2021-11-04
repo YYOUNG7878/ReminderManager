@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/GLM/app/src/main/res/layout/activity_main.xml" value="0.490036231884058" />
+        <entry key="..\:/GLM/app/src/main/res/layout/fragment_reminder.xml" value="0.490036231884058" />
+        <entry key="..\:/GLM/app/src/main/res/layout/reminder.xml" value="0.26874366767983787" />
+        <entry key="..\:/GLM/app/src/main/res/layout/reminder_list.xml" value="0.5" />
+        <entry key="..\:/GLM/app/src/main/res/layout/reminder_list_list.xml" value="0.26874366767983787" />
+        <entry key="..\:/GLM/app/src/main/res/layout/reminder_list_manager.xml" value="0.5536458333333333" />
+        <entry key="..\:/GLM/app/src/main/res/layout/reminder_list_recycler.xml" value="0.26874366767983787" />
+        <entry key="..\:/GLM/app/src/main/res/layout/reminder_recycler.xml" value="0.26874366767983787" />
+        <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/reminder_list_manager.xml" value="0.5536458333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

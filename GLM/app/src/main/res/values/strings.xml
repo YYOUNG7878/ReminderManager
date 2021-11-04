@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GLM</string>
+    <string name="reminder_name_hint">Enter a name for the reminder</string>
+    <string name="reminder_type_hint">Enter a type for the reminder</string>
+    <string name="reminder_name_label">NAME:</string>
+    <string name="reminder_type_label">TYPE:</string>
+    <string name="reminder_date_label">Date of reminder:</string>
+</resources>
