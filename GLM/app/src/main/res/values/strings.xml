@@ -5,4 +5,6 @@
     <string name="reminder_name_label">NAME:</string>
     <string name="reminder_type_label">TYPE:</string>
     <string name="reminder_date_label">Date of reminder:</string>
+    <string name="new_reminder">New Reminder</string>
+    <string name="delete_reminder">Delete Reminder</string>
 </resources>

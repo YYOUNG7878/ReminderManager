@@ -19,10 +19,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ReminderListActivity" >
+            android:name=".ReminderListActivity"
+            android:launchMode="singleTop">
         </activity>
         <activity
-            android:name=".ReminderActivity" >
+            android:name=".ReminderActivity"
+            android:parentActivityName=".ReminderListActivity">
         </activity>
     </application>
 

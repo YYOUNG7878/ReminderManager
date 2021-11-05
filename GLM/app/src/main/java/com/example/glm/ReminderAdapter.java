@@ -2,11 +2,13 @@ package com.example.glm;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -17,13 +19,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
-public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
+public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> implements ItemTouchHelperAdapter{
 
     private static final String EXTRA_REMINDERLIST_ID = "reminderlist_id";
     private static final String EXTRA_REMINDER_ID = "reminder_id";
 
+    private List<Reminder> mReminders;
+    private ViewHolder mViewholder;
     private ReminderList reminderlist;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -43,6 +48,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         private Reminder reminder;
 
+        /*
         public void bind(Reminder r){
             reminder = r;
             nameTextView.setText(reminder.getName());
@@ -55,6 +61,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
                 }
             });
         }
+
+         */
 
 
         @Override
@@ -69,27 +77,56 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     }
 
     public ReminderAdapter (ReminderList rs){
-        reminderlist = rs;
+        mReminders = rs.getReminders();
     }
+
+    public void updateReminderList (ReminderList rs){
+        mReminders = rs.getReminders();
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.reminder_list, viewGroup, false);
         ViewHolder holder = new ViewHolder(view);
-        return new ViewHolder(view);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Reminder reminder = reminderlist.getReminders().get(position);
-        holder.bind(reminder);
+        mViewholder = holder;
+        Reminder reminder = mReminders.get(position);
+
+        mViewholder.reminder = reminder;
+        mViewholder.nameTextView.setText(reminder.getName());
+        mViewholder.dateTextView.setText(reminder.getDate().toString());
+        mViewholder.checkoffView.setChecked(reminder.isCheckoff());
+        mViewholder.checkoffView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                reminder.setCheckoff(b);
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return reminderlist.getReminders().size();
+        return mReminders.size();
     }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition){
+        Collections.swap(mReminders, fromPosition, toPosition);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemDismiss(int position){
+
+    }
+
 }
 
 

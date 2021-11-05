@@ -13,6 +13,7 @@ public class Reminder {
 
     public Reminder(){
         id = UUID.randomUUID();
+        name = "new Reminder";
         date = new Date();
     }
 

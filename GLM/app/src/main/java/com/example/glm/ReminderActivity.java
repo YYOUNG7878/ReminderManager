@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -98,5 +101,25 @@ public class ReminderActivity extends AppCompatActivity implements DateTimeFragm
         Toast.makeText(this, "Date Changed!", Toast.LENGTH_SHORT).show();
         dateButton.setText(date.toString());
         mReminder.setDate(date);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reminder, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_reminder:
+                //this.finish();
+                //ReminderListManager.getList(mReminder.getList_id()).deleteReminder(mReminder.getId());
+                //this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

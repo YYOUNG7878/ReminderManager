@@ -15,13 +15,6 @@ public class ReminderList {
         id = UUID.randomUUID();
         name = "Reminder List 1";
         reminders = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            Reminder r = new Reminder();
-            r.setName("Reminder #" + i);
-            r.setCheckoff(i % 2 == 0);
-            r.setList_id(this.id);
-            reminders.add(r);
-        }
     }
 
     public UUID getId() {
@@ -46,7 +39,19 @@ public class ReminderList {
                 return reminder;
             }
         }
-
         return null;
+    }
+
+    public void addReminder(Reminder r){
+        reminders.add(r);
+        r.setList_id(this.id);
+    }
+
+    public void deleteReminder(UUID reminderId){
+        for(Reminder reminder : reminders){
+            if(reminder.getId().equals(reminderId)){
+                reminders.remove(reminder);
+            }
+        }
     }
 }
