@@ -1,5 +1,6 @@
 package com.example.glm;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,14 +10,18 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
 
+import java.util.Date;
 import java.util.UUID;
 
-public class ReminderActivity extends AppCompatActivity {
+public class ReminderActivity extends AppCompatActivity implements DateTimeFragment.ConfirmListener{
     private static final String EXTRA_REMINDERLIST_ID = "reminderlist_id";
     private static final String EXTRA_REMINDER_ID = "reminder_id";
+    private static final String DATETIME_DIALOG = "datetime_dialog";
 
     private Reminder mReminder;
     private EditText nameField;
@@ -38,7 +43,8 @@ public class ReminderActivity extends AppCompatActivity {
         nameField.setText(mReminder.getName());
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -46,14 +52,16 @@ public class ReminderActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) { }
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         typeField = findViewById(R.id.reminder_type);
         typeField.setText(mReminder.getType());
         typeField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -61,7 +69,8 @@ public class ReminderActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) { }
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         dateButton = findViewById(R.id.reminder_date);
@@ -69,7 +78,8 @@ public class ReminderActivity extends AppCompatActivity {
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                DateTimeFragment datetimefragment = DateTimeFragment.newInstance(mReminder.getDate());
+                datetimefragment.show(getSupportFragmentManager(), DATETIME_DIALOG);
             }
         });
 
@@ -83,4 +93,10 @@ public class ReminderActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onClickComplete(Date date){
+        Toast.makeText(this, "Date Changed!", Toast.LENGTH_SHORT).show();
+        dateButton.setText(date.toString());
+        mReminder.setDate(date);
+    }
 }
