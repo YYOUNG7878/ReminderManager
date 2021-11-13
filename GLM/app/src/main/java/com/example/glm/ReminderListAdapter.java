@@ -1,15 +1,14 @@
 package com.example.glm;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ReminderListAdapter extends RecyclerView.Adapter<ReminderListAdapter.ViewHolder> {
@@ -39,20 +38,24 @@ public class ReminderListAdapter extends RecyclerView.Adapter<ReminderListAdapte
         @Override
         public void onClick(View v){
            Intent intent = new Intent(v.getContext(), ReminderListActivity.class);
-           intent.putExtra(EXTRA_REMINDERLIST_ID, mReminderlist.getId() ); ///
+           intent.putExtra(EXTRA_REMINDERLIST_ID, mReminderlist.getId());
            v.getContext().startActivity(intent);
         }
 
     }
 
-    public ReminderListAdapter (ReminderListManager rll){
-        mReminderlists = rll.getReminderLists();
+    public ReminderListAdapter (ReminderListManager rlm){
+        mReminderlists = rlm.getReminderLists();
+    }
+
+    public void updateReminderListManager (ReminderListManager rlm){
+        mReminderlists = rlm.getReminderLists();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.reminder_list_manager, viewGroup, false);
+                .inflate(R.layout.reminder_list_item, viewGroup, false);
         ViewHolder holder = new ViewHolder(view);
         return new ViewHolder(view);
     }

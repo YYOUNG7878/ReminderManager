@@ -1,11 +1,14 @@
 package com.example.glm;
 
-import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.widget.TextView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,69 +18,67 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentResultListener;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class ReminderActivity extends AppCompatActivity implements DateTimeFragment.ConfirmListener{
+public class AddReminderActivity extends AppCompatActivity implements DateTimeFragment.ConfirmListener{
     private static final String EXTRA_REMINDERLIST_ID = "reminderlist_id";
     private static final String EXTRA_REMINDER_ID = "reminder_id";
     private static final String DATETIME_DIALOG = "datetime_dialog";
 
     private Reminder mReminder;
-    private EditText nameField;
-    private EditText typeField;
-    private Button dateButton;
     private CheckBox checkoff;
+    private EditText nameField;
+    private Spinner typeSpinner;
+    private TextView showTime;
+    private Date mDate;
+    private Button dateButton;
+    private String[] types = {"Appointment", "Event", "Meeting", "Task"};
+    private Button setReminder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reminder);
+        setContentView(R.layout.add_reminder);
 
         Intent i = getIntent();
         UUID reminderlistId = (UUID) getIntent().getSerializableExtra(EXTRA_REMINDERLIST_ID);
         UUID reminderId = (UUID) getIntent().getSerializableExtra(EXTRA_REMINDER_ID);
         mReminder = ReminderListManager.getList(reminderlistId).getReminder(reminderId);
 
+        this.setTitle(mReminder.getName());
+
         nameField = findViewById(R.id.reminder_name);
         nameField.setText(mReminder.getName());
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mReminder.setName(charSequence.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+
             }
         });
 
-        typeField = findViewById(R.id.reminder_type);
-        typeField.setText(mReminder.getType());
-        typeField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        typeSpinner = findViewById(R.id.spinner_reminder_type);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ReminderListManager.types);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(adapter);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mReminder.setType(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
+        showTime = findViewById(R.id.tv_reminder_time);
         dateButton = findViewById(R.id.reminder_date);
-        dateButton.setText(mReminder.getDate().toString());
+        mDate = mReminder.getDate();
+        showTime.setText(mReminder.getDate().toString());
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,16 +92,30 @@ public class ReminderActivity extends AppCompatActivity implements DateTimeFragm
         checkoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                mReminder.setCheckoff(b);
+
             }
+        });
+
+        setReminder = findViewById(R.id.btn_set);
+        setReminder.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                mReminder.setName(nameField.getText().toString());
+                mReminder.setDate(mDate);
+                mReminder.setCheckoff(checkoff.isChecked());
+                mReminder.setType(typeSpinner.getSelectedItem().toString());
+                Toast.makeText(AddReminderActivity.this, "Reminder has been updated", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
         });
     }
 
     @Override
     public void onClickComplete(Date date){
-        Toast.makeText(this, "Date Changed!", Toast.LENGTH_SHORT).show();
-        dateButton.setText(date.toString());
-        mReminder.setDate(date);
+        Toast.makeText(this, "Time updated!", Toast.LENGTH_SHORT).show();
+        showTime.setText(date.toString());
+        mDate = date;
     }
 
     @Override
@@ -114,10 +129,24 @@ public class ReminderActivity extends AppCompatActivity implements DateTimeFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_reminder:
-                //this.finish();
-                //ReminderListManager.getList(mReminder.getList_id()).deleteReminder(mReminder.getId());
-                //this.finish();
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("Are you sure you want to delete this reminder?");
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ReminderListManager.getList(mReminder.getList_id()).deleteReminder(mReminder.getId());
+                        finish();
+                    }
+                });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.show();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

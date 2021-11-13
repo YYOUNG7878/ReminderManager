@@ -3,6 +3,7 @@ package com.example.glm;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,12 @@ public class ReminderList {
 
     public ReminderList(){
         id = UUID.randomUUID();
-        name = "Reminder List 1";
+        name = "New ReminderList";
+        reminders = new ArrayList<>();
+    }
+
+    public ReminderList(String thisName, List<Reminder> theseReminders){
+        name = "Sample Reminder";
         reminders = new ArrayList<>();
     }
 
@@ -48,9 +54,11 @@ public class ReminderList {
     }
 
     public void deleteReminder(UUID reminderId){
-        for(Reminder reminder : reminders){
-            if(reminder.getId().equals(reminderId)){
-                reminders.remove(reminder);
+        Iterator<Reminder> iter = reminders.iterator();
+        while(iter.hasNext()){
+            Reminder item = iter.next();
+            if(item.getId().equals(reminderId)){
+                iter.remove();
             }
         }
     }

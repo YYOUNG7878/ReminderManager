@@ -14,7 +14,14 @@ public class Reminder {
     public Reminder(){
         id = UUID.randomUUID();
         name = "new Reminder";
+        type = "undefined type";
         date = new Date();
+    }
+
+    public Reminder(UUID thisID, String thisName, Date thisDate){
+        id = thisID;
+        name = thisName;
+        date = thisDate;
     }
 
     public UUID getId() {

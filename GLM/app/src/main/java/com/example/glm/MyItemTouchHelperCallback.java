@@ -17,15 +17,9 @@ public class MyItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        if(recyclerView.getLayoutManager() instanceof GridLayoutManager) {
-            final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-            final int swipeFlags = 0;
-            return makeMovementFlags(dragFlags, swipeFlags);
-        } else {
-            final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            final int swipeFlags = 0;
-            return makeMovementFlags(dragFlags, swipeFlags);
-        }
+        final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+        final int swipeFlags = ItemTouchHelper.RIGHT;
+        return makeMovementFlags(dragFlags, swipeFlags);
     }
 
     @Override
@@ -36,7 +30,7 @@ public class MyItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
+        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
     }
 
     @Override
@@ -46,9 +40,10 @@ public class MyItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled(){
-        return true;
+        return false;
     }
 
+    /*
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState){
         if(actionState != ItemTouchHelper.ACTION_STATE_IDLE){
@@ -56,4 +51,6 @@ public class MyItemTouchHelperCallback extends ItemTouchHelper.Callback {
         }
         super.onSelectedChanged(viewHolder, actionState);
     }
+
+     */
 }

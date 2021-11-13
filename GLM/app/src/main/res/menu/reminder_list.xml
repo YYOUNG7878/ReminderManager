@@ -4,6 +4,26 @@
     <item
         android:id="@+id/new_reminder"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/new_reminder"
-        app:showAsAction="ifRoom|withText"/>
+        android:title="Add Reminder"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/rename_reminderlist"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Rename This List"
+        app:showAsAction="never|withText" />
+
+    <item
+        android:id="@+id/delete_reminderlist"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete This List"
+        app:showAsAction="never|withText"/>
+
+    <item
+        android:id="@+id/clear_checkoff"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Clear All CheckOff Marks"
+        app:showAsAction="never|withText"/>
+
+
 </menu>
