@@ -21,7 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.glm.R;
+import edu.qc.seclass.glm.R;
 
 import java.util.Date;
 import java.util.UUID;

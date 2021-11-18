@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.glm.R;
+import edu.qc.seclass.glm.R;
 
 import java.util.Collections;
 import java.util.List;

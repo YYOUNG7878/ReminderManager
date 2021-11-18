@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.glm.R;
+import edu.qc.seclass.glm.R;
 
 public class MainActivity extends AppCompatActivity {
 

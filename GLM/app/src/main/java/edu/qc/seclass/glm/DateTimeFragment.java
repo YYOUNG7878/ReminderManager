@@ -11,7 +11,7 @@ import android.widget.TimePicker;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.glm.R;
+import edu.qc.seclass.glm.R;
 
 import java.util.Calendar;
 import java.util.Date;

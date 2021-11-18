@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.glm.R;
+import edu.qc.seclass.glm.R;
 
 import java.util.List;
 
