@@ -1,4 +1,4 @@
-package com.example.glm;
+package edu.qc.seclass.glm;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GLM">
         <activity
-            android:name=".MainActivity"
+            android:name="edu.qc.seclass.glm.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,11 +19,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ReminderListActivity"
+            android:name="edu.qc.seclass.glm.ReminderListActivity"
             android:launchMode="singleTop">
         </activity>
         <activity
-            android:name=".AddReminderActivity" >
+            android:name="edu.qc.seclass.glm.AddReminderActivity" >
         </activity>
     </application>
 

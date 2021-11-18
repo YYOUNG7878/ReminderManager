@@ -1,9 +1,6 @@
-package com.example.glm;
-
-import android.graphics.Color;
+package edu.qc.seclass.glm;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 

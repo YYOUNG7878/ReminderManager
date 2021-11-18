@@ -1,4 +1,4 @@
-package com.example.glm;
+package edu.qc.seclass.glm;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,6 +10,8 @@ import android.widget.TimePicker;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.glm.R;
 
 import java.util.Calendar;
 import java.util.Date;

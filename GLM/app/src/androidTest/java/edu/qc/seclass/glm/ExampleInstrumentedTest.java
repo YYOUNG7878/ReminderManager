@@ -1,4 +1,4 @@
-package com.example.glm;
+package edu.qc.seclass.glm;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.glm", appContext.getPackageName());
+        assertEquals("com.seclass.glm", appContext.getPackageName());
     }
 }

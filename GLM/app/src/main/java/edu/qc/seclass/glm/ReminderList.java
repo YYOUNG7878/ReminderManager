@@ -1,6 +1,4 @@
-package com.example.glm;
-
-import android.content.Context;
+package edu.qc.seclass.glm;
 
 import java.util.ArrayList;
 import java.util.Iterator;

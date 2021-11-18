@@ -1,4 +1,4 @@
-package com.example.glm;
+package edu.qc.seclass.glm;
 
 public interface ItemTouchHelperAdapter {
 

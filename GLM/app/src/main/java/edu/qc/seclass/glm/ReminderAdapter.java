@@ -1,4 +1,4 @@
-package com.example.glm;
+package edu.qc.seclass.glm;
 
 
 import android.annotation.SuppressLint;
@@ -11,10 +11,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.glm.R;
 
 import java.util.Collections;
 import java.util.List;

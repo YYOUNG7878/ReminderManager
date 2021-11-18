@@ -1,4 +1,4 @@
-package com.example.glm;
+package edu.qc.seclass.glm;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.glm.R;
 
 import java.util.Date;
 import java.util.UUID;
