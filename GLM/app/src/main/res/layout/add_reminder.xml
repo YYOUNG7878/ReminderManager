@@ -28,17 +28,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reminder_checkoff" />
 
-    <Spinner
-        android:id="@+id/spinner_reminder_type"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/text_type"
+        android:layout_width="290dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical"
+        android:text="Type for reminder"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_set_type" />
+
+    <ImageButton
+        android:id="@+id/button_type"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_type"
+        app:layout_constraintTop_toBottomOf="@+id/tv_set_type"
+        app:srcCompat="@drawable/ic_action_name" />
 
     <TextView
         android:id="@+id/tv_set_name"
@@ -49,7 +61,7 @@
         android:gravity="center"
         android:text="@string/reminder_name_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_reminder_type" />
+        app:layout_constraintTop_toBottomOf="@+id/text_type" />
 
     <EditText
         android:id="@+id/reminder_name"
@@ -80,6 +92,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_set_time"
@@ -108,5 +121,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_reminder_time" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

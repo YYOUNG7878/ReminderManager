@@ -2,8 +2,11 @@ package edu.qc.seclass.glm;
 
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import edu.qc.seclass.glm.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> implements ItemTouchHelperAdapter{
-
-    private static final String EXTRA_REMINDERLIST_ID = "reminderlist_id";
-    private static final String EXTRA_REMINDER_ID = "reminder_id";
+public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
 
     private List<Reminder> mReminders;
-    private ViewHolder mViewholder;
-    private ReminderList reminderlist;
+
+    private SQLiteDatabase mDB;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -51,40 +53,24 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         private Reminder reminder;
 
-        /*
-        public void bind(Reminder r){
-            reminder = r;
-            nameTextView.setText(reminder.getName());
-            dateTextView.setText(reminder.getDate().toString());
-            checkoffView.setChecked(reminder.isCheckoff());
-            checkoffView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    reminder.setCheckoff(b);
-                }
-            });
-        }
-
-         */
-
-
         @Override
         public void onClick(View v){
             Intent intent = new Intent();
             intent.setClass(v.getContext(), AddReminderActivity.class);
-            intent.putExtra(EXTRA_REMINDERLIST_ID, reminder.getList_id());
-            intent.putExtra(EXTRA_REMINDER_ID, reminder.getId());
+            intent.putExtra("reminderlist_id", reminder.getList_id());
+            intent.putExtra("reminder_id", reminder.getId());
             v.getContext().startActivity(intent);
         }
 
     }
 
-    public ReminderAdapter (ReminderList rs){
-        mReminders = rs.getReminders();
+    public ReminderAdapter (List<Reminder> rs, Context context){
+        mReminders = rs;
+        mDB = new ReminderBaseHelper(context).getWritableDatabase();
     }
 
-    public void updateReminderList (ReminderList rs){
-        mReminders = rs.getReminders();
+    public void updateReminderList (List<Reminder> rs){
+        mReminders = rs;
     }
 
 
@@ -98,18 +84,18 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //mViewholder = holder;
         Reminder reminder = mReminders.get(position);
 
         holder.reminder = reminder;
         holder.nameTextView.setText(reminder.getName());
         holder.typeSpinnerView.setText(reminder.getType());
-        holder.dateTextView.setText(reminder.getDate().toString());
+        holder.dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(reminder.getDate()));
         holder.checkoffView.setChecked(reminder.isCheckoff());
         holder.checkoffView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 reminder.setCheckoff(b);
+                updateCheckOff(reminder);
             }
         });
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +107,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         UUID id = reminder.getId();
-                        ReminderListManager.getList(reminder.getList_id()).deleteReminder(id);
+                        Iterator<Reminder> iter = mReminders.iterator();
+                        while(iter.hasNext()){
+                            Reminder item = iter.next();
+                            if(item.getId().equals(id)){
+                                iter.remove();
+                            }
+                        }
+                        deleteReminder_db(id);
                         notifyDataSetChanged();
                     }
                 });
@@ -135,21 +128,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             }
         });
 
-        /*
-        mViewholder.reminder = reminder;
-        mViewholder.nameTextView.setText(reminder.getName());
-        mViewholder.typeSpinnerView.setText(reminder.getType());
-        mViewholder.dateTextView.setText(reminder.getDate().toString());
-        mViewholder.checkoffView.setChecked(reminder.isCheckoff());
-        mViewholder.checkoffView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                reminder.setCheckoff(b);
-            }
-        });
-
-
-         */
     }
 
     @Override
@@ -157,19 +135,19 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         return mReminders.size();
     }
 
-    @Override
-    public void onItemMove(int fromPosition, int toPosition){
-        Collections.swap(mReminders, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
+    public void updateCheckOff(Reminder r){
+        ContentValues values = new ContentValues();
+        values.put("r_checkoff", (r.isCheckoff())? 1 : 0);
+        String whereClause = "r_id" + "=?";
+        String whereArgs[] = new String[]{r.getId().toString()};
+        mDB.update("reminders", values, whereClause, whereArgs);
     }
 
-    @Override
-    public void onItemDismiss(int position){
-        UUID id = mReminders.get(position).getId();
-        ReminderListManager.getList(mReminders.get(position).getList_id()).deleteReminder(id);
-        notifyItemRemoved(position);
+    public void deleteReminder_db(UUID r_id){
+        String whereClause = "r_id" + "=?";
+        String whereArgs[] = new String[]{r_id.toString()};
+        mDB.delete("reminders", whereClause, whereArgs);
     }
-
 }
 
 

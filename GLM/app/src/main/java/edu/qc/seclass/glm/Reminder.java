@@ -9,19 +9,24 @@ public class Reminder {
     private String name;
     private String type;
     private Date date;
-    private boolean checkoff;
+    private Boolean checkoff;
 
-    public Reminder(){
+    public Reminder(UUID r_list_id){
         id = UUID.randomUUID();
+        list_id = r_list_id;
         name = "new Reminder";
-        type = "undefined type";
+        type = "Appointment";
         date = new Date();
+        checkoff = false;
     }
 
-    public Reminder(UUID thisID, String thisName, Date thisDate){
-        id = thisID;
-        name = thisName;
-        date = thisDate;
+    public Reminder(UUID r_id, UUID r_list_id, String r_name, String r_type, Date r_date, Boolean r_checkoff){
+        id = r_id;
+        list_id = r_list_id;
+        name = r_name;
+        type = r_type;
+        date = r_date;
+        checkoff = r_checkoff;
     }
 
     public UUID getId() {

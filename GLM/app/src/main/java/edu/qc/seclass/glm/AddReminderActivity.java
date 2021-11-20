@@ -1,8 +1,14 @@
 package edu.qc.seclass.glm;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,33 +29,50 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.qc.seclass.glm.R;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class AddReminderActivity extends AppCompatActivity implements DateTimeFragment.ConfirmListener{
-    private static final String EXTRA_REMINDERLIST_ID = "reminderlist_id";
-    private static final String EXTRA_REMINDER_ID = "reminder_id";
     private static final String DATETIME_DIALOG = "datetime_dialog";
 
+    private UUID mReminderId;
+    private UUID mListId;
+
     private Reminder mReminder;
+    private String mName;
+    private String mType;
+    private Date mDate;
+    private Boolean mCheckoff;
+
     private CheckBox checkoff;
     private EditText nameField;
-    private Spinner typeSpinner;
+    private TextView showType;
+    private ImageButton typeButton;
     private TextView showTime;
-    private Date mDate;
     private Button dateButton;
-    private String[] types = {"Appointment", "Event", "Meeting", "Task"};
     private Button setReminder;
+
+
+    private SQLiteDatabase mDB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_reminder);
 
+        mDB = new ReminderBaseHelper(this).getWritableDatabase();
+
         Intent i = getIntent();
-        UUID reminderlistId = (UUID) getIntent().getSerializableExtra(EXTRA_REMINDERLIST_ID);
-        UUID reminderId = (UUID) getIntent().getSerializableExtra(EXTRA_REMINDER_ID);
-        mReminder = ReminderListManager.getList(reminderlistId).getReminder(reminderId);
+        mListId = (UUID) getIntent().getSerializableExtra("reminderlist_id");
+        mReminderId = (UUID) getIntent().getSerializableExtra("reminder_id");
+        mReminder = getReminder(mReminderId);
+
+        mName = mReminder.getName();
+        mType = mReminder.getType();
+        mDate = mReminder.getDate();
+        mCheckoff = mReminder.isCheckoff();
 
         this.setTitle(mReminder.getName());
 
@@ -63,7 +86,7 @@ public class AddReminderActivity extends AppCompatActivity implements DateTimeFr
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mName = nameField.getText().toString();
             }
 
             @Override
@@ -72,10 +95,72 @@ public class AddReminderActivity extends AppCompatActivity implements DateTimeFr
             }
         });
 
-        typeSpinner = findViewById(R.id.spinner_reminder_type);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ReminderListManager.types);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(adapter);
+        showType = findViewById(R.id.text_type);
+        showType.setText(mReminder.getType());
+        typeButton = findViewById(R.id.button_type);
+        typeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int[] yourChoice = {-1};
+                String types[] = getTypes();
+                AlertDialog.Builder singleChoiceDialog =  new AlertDialog.Builder(view.getContext());
+                singleChoiceDialog.setTitle("Select a type:");
+                singleChoiceDialog.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        yourChoice[0] = which;
+                    }
+                });
+                singleChoiceDialog.setNegativeButton("Add a new type", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        final EditText editText = new EditText(view.getContext());
+                        AlertDialog.Builder inputDialog = new AlertDialog.Builder(view.getContext());
+                        inputDialog.setTitle("Please enter a name:").setView(editText);
+                        inputDialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String newType = editText.getText().toString();
+                                        if(newType.equals("")){
+                                            new AlertDialog.Builder(view.getContext()).setTitle("Warning!")
+                                            .setMessage("Cannot be empty!")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            }).show();
+                                        }
+                                        else if(addType(newType) == false){
+                                            new AlertDialog.Builder(view.getContext()).setTitle("Warning!")
+                                            .setMessage("The type already exists!")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            }).show();
+                                        } else {
+                                            showType.setText(newType);
+                                            mType = newType;
+                                        }
+                                    }
+                                }).show();
+                    }
+                });
+                singleChoiceDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (yourChoice[0] != -1) {
+                            showType.setText(types[yourChoice[0]]);
+                            mType = showType.getText().toString();
+                        }
+                    }
+                });
+                singleChoiceDialog.show();
+            }
+        });
 
         showTime = findViewById(R.id.tv_reminder_time);
         dateButton = findViewById(R.id.reminder_date);
@@ -103,9 +188,10 @@ public class AddReminderActivity extends AppCompatActivity implements DateTimeFr
             @Override
             public void onClick(View v){
                 mReminder.setName(nameField.getText().toString());
+                mReminder.setType(mType);
                 mReminder.setDate(mDate);
                 mReminder.setCheckoff(checkoff.isChecked());
-                mReminder.setType(typeSpinner.getSelectedItem().toString());
+                updateReminder(mReminder);
                 Toast.makeText(AddReminderActivity.this, "Reminder has been updated", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -136,7 +222,7 @@ public class AddReminderActivity extends AppCompatActivity implements DateTimeFr
                 dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ReminderListManager.getList(mReminder.getList_id()).deleteReminder(mReminder.getId());
+                        deleteReminder_db(mReminderId);
                         finish();
                     }
                 });
@@ -151,6 +237,75 @@ public class AddReminderActivity extends AppCompatActivity implements DateTimeFr
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public Reminder getReminder(UUID r_id){
+        Reminder r = new Reminder(mListId);
+
+        String rawquery = "select * from reminders where r_id = " + "'" + r_id.toString() + "'" +";";
+        Cursor cursor = mDB.rawQuery(rawquery,null);
+        while(cursor.moveToNext()){
+            UUID id =  UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("r_id")));
+            UUID list_id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("rl_id")));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow("r_name"));
+            String type = cursor.getString(cursor.getColumnIndexOrThrow("r_type"));
+            Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow("r_date")));
+            Boolean check_off = false;
+            if(cursor.getInt(cursor.getColumnIndexOrThrow("r_checkoff")) == 1){
+                check_off = true;
+            }
+            r = new Reminder(id, list_id, name, type, date, check_off);
+        }
+        cursor.close();
+        return r;
+    }
+
+    public void deleteReminder_db(UUID r_id){
+        String whereClause = "r_id" + "=?";
+        String whereArgs[] = new String[]{r_id.toString()};
+        mDB.delete("reminders", whereClause, whereArgs);
+    }
+
+    public void updateReminder(Reminder r){
+        ContentValues values = new ContentValues();
+        values.put("r_name", r.getName());
+        values.put("r_type", r.getType());
+        values.put("r_date", r.getDate().getTime());
+        values.put("r_checkoff", (r.isCheckoff())? 1 : 0);
+        String whereClause = "r_id" + "=?";
+        String whereArgs[] = new String[]{r.getId().toString()};
+        mDB.update("reminders", values, whereClause, whereArgs);
+    }
+
+    public String[] getTypes(){
+        List<String> types = new ArrayList<>();
+
+        String rawquery = "select * from types;";
+        Cursor cursor = mDB.rawQuery(rawquery,null);
+        while(cursor.moveToNext()){
+            String t_name = cursor.getString(cursor.getColumnIndexOrThrow("t_name"));
+            types.add(t_name);
+        }
+        cursor.close();
+
+        String[] type_arr = new String[types.size()];
+        for(int i = 0; i < types.size(); i++){
+            type_arr[i] = types.get(i);
+        }
+        return type_arr;
+    }
+
+    public boolean addType(String newType){
+        String rawquery = "select * from types where t_name = " + "'" + newType + "';";
+        Cursor cursor = mDB.rawQuery(rawquery, null);
+        if(cursor.getCount() != 0){
+            return false;
+        } else {
+            ContentValues values = new ContentValues();
+            values.put("t_name", newType);
+            mDB.insert("types", null, values);
+            return true;
         }
     }
 }

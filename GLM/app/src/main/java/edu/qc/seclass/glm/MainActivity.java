@@ -4,28 +4,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import edu.qc.seclass.glm.R;
-
 public class MainActivity extends AppCompatActivity {
 
-    ReminderListManager RLL = new ReminderListManager();
+    ReminderListManager RLM;
     private RecyclerView recyclerView;
     private ReminderListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reminder_list_recycler);
 
+        RLM = new ReminderListManager(this);
+
+        setContentView(R.layout.reminder_list_recycler);
         recyclerView = (RecyclerView) findViewById(R.id.reminder_list_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new ReminderListAdapter(RLL);
+        mAdapter = new ReminderListAdapter(RLM);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.reminder_list_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ReminderListAdapter adapter = new ReminderListAdapter(RLL);
+        ReminderListAdapter adapter = new ReminderListAdapter(RLM);
         recyclerView.setAdapter(adapter);
     }
 
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_reminderlist:
-                ReminderList reminderlist = new ReminderList();
-                RLL.addReminderList(reminderlist);
-                mAdapter.updateReminderListManager(RLL);
+                ReminderList reminderlist = new ReminderList(this);
+                RLM.addReminderList(reminderlist);
+                mAdapter.updateReminderListManager(RLM);
                 recyclerView.setAdapter(mAdapter);
                 return true;
 

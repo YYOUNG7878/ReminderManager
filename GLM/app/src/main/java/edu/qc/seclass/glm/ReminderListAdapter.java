@@ -14,8 +14,6 @@ import java.util.List;
 
 public class ReminderListAdapter extends RecyclerView.Adapter<ReminderListAdapter.ViewHolder> {
 
-    private static final String EXTRA_REMINDERLIST_ID = "reminderlist_id";
-
     private List<ReminderList> mReminderlists;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -39,7 +37,8 @@ public class ReminderListAdapter extends RecyclerView.Adapter<ReminderListAdapte
         @Override
         public void onClick(View v){
            Intent intent = new Intent(v.getContext(), ReminderListActivity.class);
-           intent.putExtra(EXTRA_REMINDERLIST_ID, mReminderlist.getId());
+           intent.putExtra("reminderlist_id", mReminderlist.getId());
+           intent.putExtra("reminderlist_name", mReminderlist.getName());
            v.getContext().startActivity(intent);
         }
 
