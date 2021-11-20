@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/new_reminderlist"
+        android:id="@+id/new_type_list"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="new reminderlist"
+        android:title="new type list"
         app:showAsAction="ifRoom|withText"/>
 </menu>

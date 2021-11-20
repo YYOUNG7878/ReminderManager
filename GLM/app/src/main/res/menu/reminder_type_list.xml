@@ -2,33 +2,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/new_reminder"
+        android:id="@+id/new_reminder_type_list"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Add Reminder"
         app:showAsAction="always|withText"/>
 
     <item
-        android:id="@+id/rename_reminderlist"
+        android:id="@+id/rename_type_list"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="Rename This List"
+        android:title="Rename This Type"
         app:showAsAction="never|withText" />
 
     <item
-        android:id="@+id/delete_reminderlist"
+        android:id="@+id/delete_type_list"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete This List"
+        android:title="Delete This Type"
         app:showAsAction="never|withText"/>
 
     <item
-        android:id="@+id/clear_checkoff"
+        android:id="@+id/clear_checkoff_type_list"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="Clear All CheckOff Marks"
         app:showAsAction="never|withText"/>
 
     <item
-        android:id="@+id/move_reminder"
+        android:id="@+id/move_reminder_type_list"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Move Reminder"
+        android:title="Move Reminder to"
         app:showAsAction="never|withText"/>
 
 </menu>

@@ -2,11 +2,9 @@ package edu.qc.seclass.glm;
 
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,55 +16,51 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import edu.qc.seclass.glm.R;
-
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
+public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.ViewHolder> {
+
+    private DataBaseManager mRLM;
 
     private List<Reminder> mReminders;
 
-    private SQLiteDatabase mDB;
-
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        protected TextView nameTextView;
-        protected TextView dateTextView;
-        protected TextView typeSpinnerView;
-        protected CheckBox checkoffView;
-        protected ImageButton deleteButton;
+        private Reminder reminder;
+
+        private TextView nameTextView;
+        private TextView dateTextView;
+        private TextView typeTextView;
+        private CheckBox checkoffView;
+        private ImageButton deleteButton;
 
         public ViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
 
-            nameTextView = (TextView) view.findViewById(R.id.reminder_name_title);
-            dateTextView = (TextView) view.findViewById(R.id.reminder_date_title);
-            checkoffView = (CheckBox) view.findViewById(R.id.reminder_checkoff_title);
-            typeSpinnerView = (TextView) view.findViewById(R.id.reminder_type_title);
-            deleteButton = (ImageButton) view.findViewById(R.id.delete_reminder_inlist);
+            nameTextView = view.findViewById(R.id.reminder_name_title);
+            dateTextView = view.findViewById(R.id.reminder_date_title);
+            checkoffView = view.findViewById(R.id.reminder_checkoff_title);
+            typeTextView = view.findViewById(R.id.reminder_type_title);
+            deleteButton = view.findViewById(R.id.delete_reminder_inlist);
         }
-
-        private Reminder reminder;
 
         @Override
         public void onClick(View v){
             Intent intent = new Intent();
-            intent.setClass(v.getContext(), AddReminderActivity.class);
-            intent.putExtra("reminderlist_id", reminder.getList_id());
+            intent.setClass(v.getContext(), SingleReminderActivity.class);
             intent.putExtra("reminder_id", reminder.getId());
             v.getContext().startActivity(intent);
         }
 
     }
 
-    public ReminderAdapter (List<Reminder> rs, Context context){
+    public RemindersAdapter(List<Reminder> rs, Context context){
         mReminders = rs;
-        mDB = new ReminderBaseHelper(context).getWritableDatabase();
+        mRLM = DataBaseManager.get(context);
     }
 
     public void updateReminderList (List<Reminder> rs){
@@ -88,14 +82,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         holder.reminder = reminder;
         holder.nameTextView.setText(reminder.getName());
-        holder.typeSpinnerView.setText(reminder.getType());
+        holder.typeTextView.setText(reminder.getType());
         holder.dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(reminder.getDate()));
         holder.checkoffView.setChecked(reminder.isCheckoff());
         holder.checkoffView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 reminder.setCheckoff(b);
-                updateCheckOff(reminder);
+                mRLM.updateCheckOff(reminder);
             }
         });
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +108,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
                                 iter.remove();
                             }
                         }
-                        deleteReminder_db(id);
+                        mRLM.deleteReminder(id);
                         notifyDataSetChanged();
                     }
                 });
@@ -135,19 +129,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         return mReminders.size();
     }
 
-    public void updateCheckOff(Reminder r){
-        ContentValues values = new ContentValues();
-        values.put("r_checkoff", (r.isCheckoff())? 1 : 0);
-        String whereClause = "r_id" + "=?";
-        String whereArgs[] = new String[]{r.getId().toString()};
-        mDB.update("reminders", values, whereClause, whereArgs);
-    }
-
-    public void deleteReminder_db(UUID r_id){
-        String whereClause = "r_id" + "=?";
-        String whereArgs[] = new String[]{r_id.toString()};
-        mDB.delete("reminders", whereClause, whereArgs);
-    }
 }
 
 

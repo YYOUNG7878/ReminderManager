@@ -19,11 +19,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.qc.seclass.glm.ReminderListActivity"
+            android:name="edu.qc.seclass.glm.customListActivity" >
+        </activity>
+        <activity
+            android:name="edu.qc.seclass.glm.RemindersByListActivity"
             android:launchMode="singleTop">
         </activity>
         <activity
-            android:name="edu.qc.seclass.glm.AddReminderActivity" >
+            android:name="edu.qc.seclass.glm.SingleReminderActivity" >
+        </activity>
+        <activity
+            android:name="edu.qc.seclass.glm.typeListActivity" >
+        </activity>
+        <activity
+            android:name="edu.qc.seclass.glm.RemindersByTypeActivity" >
+        </activity>
+        <activity
+            android:name="edu.qc.seclass.glm.SearchActivity" >
         </activity>
     </application>
 

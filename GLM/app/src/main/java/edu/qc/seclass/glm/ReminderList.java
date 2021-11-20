@@ -13,7 +13,7 @@ public class ReminderList {
     private UUID id;
     private String name;
 
-    public ReminderList(Context context){
+    public ReminderList(){
         id = UUID.randomUUID();
         name = "New ReminderList";
     }

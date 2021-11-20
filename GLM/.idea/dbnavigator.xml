@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -26,13 +26,13 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="94caca6e-1ab1-4ea6-8cfc-3fa181138c9f">
-        <schema name="main" object-types="table, view, constraint, index, column, dataset trigger" />
+        <schema name="main" object-types="table, view, column" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="94caca6e-1ab1-4ea6-8cfc-3fa181138c9f">
-      <console name="Connection" type="STANDARD" schema="main" session="Main"><![CDATA[select * from reminders;
+      <console name="Connection" type="STANDARD" schema="main" session="Main"><![CDATA[select * from reminders where r_name like '%e%'  or r_type like '%e%';
 select * from reminderlists;]]></console>
     </connection>
   </component>
