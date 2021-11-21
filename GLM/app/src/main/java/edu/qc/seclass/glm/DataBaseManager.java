@@ -114,12 +114,13 @@ public class DataBaseManager {
             UUID list_id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("rl_id")));
             String name = cursor.getString(cursor.getColumnIndexOrThrow("r_name"));
             String type = cursor.getString(cursor.getColumnIndexOrThrow("r_type"));
+            String repeat = cursor.getString(cursor.getColumnIndexOrThrow("r_repeat"));
             Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow("r_date")));
             Boolean check_off = false;
             if(cursor.getInt(cursor.getColumnIndexOrThrow("r_checkoff")) == 1){
                 check_off = true;
             }
-            Reminder r = new Reminder(id, list_id, name, type, date, check_off);
+            Reminder r = new Reminder(id, list_id, name, type, repeat, date, check_off);
             rs.add(r);
         }
         cursor.close();
@@ -136,12 +137,13 @@ public class DataBaseManager {
             UUID list_id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("rl_id")));
             String name = cursor.getString(cursor.getColumnIndexOrThrow("r_name"));
             String type = cursor.getString(cursor.getColumnIndexOrThrow("r_type"));
+            String repeat = cursor.getString(cursor.getColumnIndexOrThrow("r_repeat"));
             Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow("r_date")));
             Boolean check_off = false;
             if(cursor.getInt(cursor.getColumnIndexOrThrow("r_checkoff")) == 1){
                 check_off = true;
             }
-            Reminder r = new Reminder(id, list_id, name, type, date, check_off);
+            Reminder r = new Reminder(id, list_id, name, type, repeat, date, check_off);
             rs.add(r);
         }
         cursor.close();
@@ -156,12 +158,13 @@ public class DataBaseManager {
             UUID list_id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("rl_id")));
             String name = cursor.getString(cursor.getColumnIndexOrThrow("r_name"));
             String type = cursor.getString(cursor.getColumnIndexOrThrow("r_type"));
+            String repeat = cursor.getString(cursor.getColumnIndexOrThrow("r_repeat"));
             Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow("r_date")));
             Boolean check_off = false;
             if(cursor.getInt(cursor.getColumnIndexOrThrow("r_checkoff")) == 1){
                 check_off = true;
             }
-            Reminder r = new Reminder(id, list_id, name, type, date, check_off);
+            Reminder r = new Reminder(id, list_id, name, type, repeat, date, check_off);
             return r;
         }
         cursor.close();
@@ -175,6 +178,7 @@ public class DataBaseManager {
         values.put("rl_id", r.getList_id().toString());
         values.put("r_name", r.getName());
         values.put("r_type", r.getType());
+        values.put("r_repeat", r.getRepeat());
         values.put("r_date", r.getDate().getTime());
         values.put("r_checkoff", (r.isCheckoff())? 1 : 0);
         mDB.insert("reminders", null, values);
@@ -212,6 +216,7 @@ public class DataBaseManager {
         ContentValues values = new ContentValues();
         values.put("r_name", r.getName());
         values.put("r_type", r.getType());
+        values.put("r_repeat", r.getRepeat());
         values.put("r_date", r.getDate().getTime());
         values.put("r_checkoff", (r.isCheckoff())? 1 : 0);
         String whereClause = "r_id" + "=?";
@@ -376,12 +381,13 @@ public class DataBaseManager {
             UUID list_id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("rl_id")));
             String name = cursor.getString(cursor.getColumnIndexOrThrow("r_name"));
             String type = cursor.getString(cursor.getColumnIndexOrThrow("r_type"));
+            String repeat = cursor.getString(cursor.getColumnIndexOrThrow("r_repeat"));
             Date date = new Date(cursor.getLong(cursor.getColumnIndexOrThrow("r_date")));
             Boolean check_off = false;
             if(cursor.getInt(cursor.getColumnIndexOrThrow("r_checkoff")) == 1){
                 check_off = true;
             }
-            Reminder r = new Reminder(id, list_id, name, type, date, check_off);
+            Reminder r = new Reminder(id, list_id, name, type, repeat, date, check_off);
             rs.add(r);
         }
         cursor.close();

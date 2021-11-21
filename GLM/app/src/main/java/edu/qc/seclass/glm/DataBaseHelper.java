@@ -15,7 +15,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table reminderlists (rl_id varchar primary key, rl_name varchar)");
-        db.execSQL("create table reminders (r_id varchar primary key, rl_id varchar, r_name varchar, r_type varchar, r_date int, r_checkoff int)");
+        db.execSQL("create table reminders (r_id varchar primary key, rl_id varchar, r_name varchar, r_type varchar, r_repeat varchar, r_date int, r_checkoff int)");
         db.execSQL("create table types (t_name varchar primary key)");
         db.execSQL("insert into types (t_name) values ('Appointment')");
         db.execSQL("insert into types (t_name) values ('Event')");

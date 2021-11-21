@@ -8,6 +8,7 @@ public class Reminder {
     private UUID list_id;
     private String name;
     private String type;
+    private String repeat;
     private Date date;
     private Boolean checkoff;
 
@@ -16,15 +17,17 @@ public class Reminder {
         list_id = r_list_id;
         name = "new Reminder";
         type = "Appointment";
+        repeat = "never";
         date = new Date();
         checkoff = false;
     }
 
-    public Reminder(UUID r_id, UUID r_list_id, String r_name, String r_type, Date r_date, Boolean r_checkoff){
+    public Reminder(UUID r_id, UUID r_list_id, String r_name, String r_type, String r_repeat, Date r_date, Boolean r_checkoff){
         id = r_id;
         list_id = r_list_id;
         name = r_name;
         type = r_type;
+        repeat = r_repeat;
         date = r_date;
         checkoff = r_checkoff;
     }
@@ -57,6 +60,14 @@ public class Reminder {
         this.type = type;
     }
 
+    public String getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(String repeat) {
+        this.repeat = repeat;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -72,6 +83,7 @@ public class Reminder {
     public void setCheckoff(boolean checkoff) {
         this.checkoff = checkoff;
     }
+
 
 
 }

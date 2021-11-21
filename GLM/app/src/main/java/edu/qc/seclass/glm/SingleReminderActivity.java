@@ -1,7 +1,6 @@
 package edu.qc.seclass.glm;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.widget.ImageButton;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,6 +29,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
     private Reminder mReminder;
     private String mName;
     private String mType;
+    private String mRepeat;
     private Date mDate;
     private Boolean mCheckoff;
 
@@ -37,8 +37,11 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
     private TextView showType;
     private ImageButton typeButton;
     private EditText nameField;
+    private ImageButton clearButton;
     private TextView showTime;
     private Button dateButton;
+    private TextView showRepeat;
+    private ImageButton repeatButton;
     private Button setReminder;
 
     private DataBaseManager mRLM;
@@ -46,7 +49,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_reminder);
+        setContentView(R.layout.single_reminder);
 
         mRLM = DataBaseManager.get(this);
 
@@ -56,6 +59,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
         mName = mReminder.getName();
         mType = mReminder.getType();
         mDate = mReminder.getDate();
+        mRepeat = mReminder.getRepeat();
         mCheckoff = mReminder.isCheckoff();
 
         this.setTitle(mReminder.getName());
@@ -76,6 +80,13 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+        clearButton = findViewById(R.id.button_clear_name);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nameField.setText("");
             }
         });
 
@@ -158,6 +169,35 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
             }
         });
 
+        showRepeat = findViewById(R.id.reminder_repeat);
+        repeatButton = findViewById(R.id.button_repeat);
+        showRepeat.setText(mRepeat);
+        repeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int[] yourChoice = {-1};
+                String repeats[] = {"Never", "Every Day", "Every Week", "Every 2 Weeks", "Every Month", "Every Year"};
+                AlertDialog.Builder singleChoiceDialog =  new AlertDialog.Builder(view.getContext());
+                singleChoiceDialog.setTitle("Set Repeat:");
+                singleChoiceDialog.setSingleChoiceItems(repeats, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        yourChoice[0] = which;
+                    }
+                });
+                singleChoiceDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (yourChoice[0] != -1) {
+                            showRepeat.setText(repeats[yourChoice[0]]);
+                            mRepeat = showRepeat.getText().toString();
+                        }
+                    }
+                });
+                singleChoiceDialog.show();
+            }
+        });
+
         checkoff = findViewById(R.id.reminder_checkoff);
         checkoff.setChecked(mReminder.isCheckoff());
         checkoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -183,6 +223,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
                 } else {
                     mReminder.setName(mName);
                     mReminder.setType(mType);
+                    mReminder.setRepeat(mRepeat);
                     mReminder.setDate(mDate);
                     mReminder.setCheckoff(mCheckoff);
                     mRLM.updateReminder(mReminder);

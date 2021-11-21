@@ -45,7 +45,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.View
             dateTextView = view.findViewById(R.id.reminder_date_title);
             checkoffView = view.findViewById(R.id.reminder_checkoff_title);
             typeTextView = view.findViewById(R.id.reminder_type_title);
-            deleteButton = view.findViewById(R.id.delete_reminder_inlist);
+            deleteButton = view.findViewById(R.id.delete_reminder_in_list);
         }
 
         @Override

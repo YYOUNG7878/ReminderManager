@@ -11,6 +11,7 @@
         <entry key="..\:/GLM/app/src/main/res/layout/reminder_list_manager.xml" value="0.5536458333333333" />
         <entry key="..\:/GLM/app/src/main/res/layout/reminder_list_recycler.xml" value="0.26874366767983787" />
         <entry key="..\:/GLM/app/src/main/res/layout/reminder_recycler.xml" value="0.26874366767983787" />
+        <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/drawable/ic_launcher_background.xml" value="0.5703125" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/activity_search.xml" value="0.23981481481481481" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/add_reminder.xml" value="0.67" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/custom_list_item.xml" value="0.5541666666666667" />
@@ -27,6 +28,7 @@
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/reminder_recycler.xml" value="0.5353260869565217" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/search_list_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/search_list_recycler.xml" value="0.5541666666666667" />
+        <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/single_reminder.xml" value="0.5541666666666667" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/type_list_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/layout/type_list_recycler.xml" value="0.5541666666666667" />
         <entry key="..\:/Git/ReminderManager/GLM/app/src/main/res/menu/custom_list_manager.xml" value="0.5541666666666667" />
