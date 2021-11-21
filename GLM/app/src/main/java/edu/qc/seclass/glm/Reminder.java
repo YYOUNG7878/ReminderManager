@@ -17,7 +17,7 @@ public class Reminder {
         list_id = r_list_id;
         name = "new Reminder";
         type = "Appointment";
-        repeat = "never";
+        repeat = "Never";
         date = new Date();
         checkoff = false;
     }

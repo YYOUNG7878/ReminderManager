@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -234,7 +235,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
                     if(!mCheckoff){
                         startAlarm(mDate);
                     }
-                    Toast.makeText(SingleReminderActivity.this, "Reminder has been updated", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SingleReminderActivity.this, "Reminder has been updated", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
@@ -243,19 +244,53 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
     }
 
     private void startAlarm(Date d) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver.class);
-        intent.putExtra("reminder_id", mReminderId);
-        int c = mDBM.getAlarmCount();
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, c, intent, 0);
-        mDBM.updateAlarmCount(c);
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, d.getTime(), pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), 30000L, pendingIntent);
+        if(d.getTime() <= System.currentTimeMillis()){
+
+        } else {
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(this, AlertReceiver.class);
+            intent.putExtra("reminder_id", mReminderId);
+            int c = mDBM.getAlarmCount();
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, c, intent, 0);
+            mDBM.updateAlarmCount(c);
+
+            switch (mRepeat) {
+                case "Never":
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, d.getTime(), pendingIntent);
+                    Toast.makeText(this, "Alarm is set.", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Every Day":
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                    Toast.makeText(this, "Alarm will be repeated daily.", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Every Week":
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), AlarmManager.INTERVAL_DAY*7, pendingIntent);
+                    Toast.makeText(this, "Alarm will be repeated weekly.", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Every 2 Week":
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), AlarmManager.INTERVAL_DAY*14, pendingIntent);
+                    Toast.makeText(this, "Alarm will be repeated every 2 week.", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Every Month":
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), AlarmManager.INTERVAL_DAY*30, pendingIntent);
+                    Toast.makeText(this, "Alarm will be repeated monthly.", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Every Year":
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), AlarmManager.INTERVAL_DAY*365, pendingIntent);
+                    Toast.makeText(this, "Alarm will be repeated yearly.", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
     }
 
     @Override
     public void onClickComplete(Date date){
-        Toast.makeText(this, "Time updated!", Toast.LENGTH_SHORT).show();
         showTime.setText(date.toString());
         mDate = date;
     }
