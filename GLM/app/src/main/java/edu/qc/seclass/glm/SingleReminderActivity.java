@@ -1,6 +1,11 @@
 package edu.qc.seclass.glm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.widget.ImageButton;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,10 +24,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-public class SingleReminderActivity extends AppCompatActivity implements DateTimeFragment.ConfirmListener{
+public class SingleReminderActivity extends AppCompatActivity implements DateTimeFragment.ConfirmListener {
 
     private UUID mReminderId;
 
@@ -227,12 +233,23 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
                     mReminder.setDate(mDate);
                     mReminder.setCheckoff(mCheckoff);
                     mRLM.updateReminder(mReminder);
+                    if(mCheckoff){
+                        startAlarm(mDate);
+                    }
                     Toast.makeText(SingleReminderActivity.this, "Reminder has been updated", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
         });
+    }
+
+    private void startAlarm(Date d) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, d.getTime(), pendingIntent);
     }
 
     @Override
