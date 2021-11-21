@@ -17,10 +17,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table reminderlists (rl_id varchar primary key, rl_name varchar)");
         db.execSQL("create table reminders (r_id varchar primary key, rl_id varchar, r_name varchar, r_type varchar, r_repeat varchar, r_date int, r_checkoff int)");
         db.execSQL("create table types (t_name varchar primary key)");
+        db.execSQL("create table alarms (a_id int primary key)");
         db.execSQL("insert into types (t_name) values ('Appointment')");
         db.execSQL("insert into types (t_name) values ('Event')");
         db.execSQL("insert into types (t_name) values ('Meeting')");
         db.execSQL("insert into types (t_name) values ('Task')");
+        db.execSQL("insert into alarms (a_id) values (1)");
     }
 
     @Override

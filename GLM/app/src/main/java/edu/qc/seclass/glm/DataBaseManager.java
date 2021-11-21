@@ -13,9 +13,9 @@ import java.util.UUID;
 public class DataBaseManager {
     private static DataBaseManager sDataBaseManager;
 
-
     private Context mContext;
     private SQLiteDatabase mDB;
+
 
     //Constructor
     public DataBaseManager(Context context){
@@ -392,5 +392,21 @@ public class DataBaseManager {
         }
         cursor.close();
         return rs;
+    }
+
+    public int getAlarmCount() {
+        String rawquery = "select * from alarms;";
+        Cursor cursor = mDB.rawQuery(rawquery, null);
+        cursor.moveToNext();
+        int count = cursor.getInt(cursor.getColumnIndexOrThrow("a_id"));
+        return count;
+    }
+
+    public void updateAlarmCount(int i) {
+        int count = i+1;
+        ContentValues values = new ContentValues();
+        values.put("a_id", count);
+        String whereClause = "a_id" + "=" + i;
+        mDB.update("alarms", values, whereClause, null);
     }
 }

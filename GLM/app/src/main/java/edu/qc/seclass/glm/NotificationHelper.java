@@ -9,6 +9,8 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import java.util.UUID;
+
 
 public class NotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";
@@ -16,11 +18,14 @@ public class NotificationHelper extends ContextWrapper {
 
     private NotificationManager mManager;
 
+    private DataBaseManager mDBM;
+
     public NotificationHelper(Context base) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
         }
+        mDBM = DataBaseManager.get(base);
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -38,10 +43,15 @@ public class NotificationHelper extends ContextWrapper {
         return mManager;
     }
 
-    public NotificationCompat.Builder getChannelNotification() {
+    public NotificationCompat.Builder getChannelNotification(UUID id) {
+        Reminder r = mDBM.getReminder(id);
+        String content = r.getName();
+        r.setCheckoff(true);
+        mDBM.updateCheckOff(r);
+
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Alarm!")
-                .setContentText("Your AlarmManager is working.")
+                .setContentTitle("Reminder Alarm!")
+                .setContentText(content)
                 .setSmallIcon(R.drawable.ic_launcher_background);
     }
 }

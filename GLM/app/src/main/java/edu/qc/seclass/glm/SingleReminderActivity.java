@@ -2,7 +2,6 @@ package edu.qc.seclass.glm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -50,17 +48,17 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
     private ImageButton repeatButton;
     private Button setReminder;
 
-    private DataBaseManager mRLM;
+    private DataBaseManager mDBM;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_reminder);
 
-        mRLM = DataBaseManager.get(this);
+        mDBM = DataBaseManager.get(this);
 
         mReminderId = (UUID) getIntent().getSerializableExtra("reminder_id");
-        mReminder = mRLM.getReminder(mReminderId);
+        mReminder = mDBM.getReminder(mReminderId);
 
         mName = mReminder.getName();
         mType = mReminder.getType();
@@ -103,7 +101,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
             @Override
             public void onClick(View view) {
                 final int[] yourChoice = {-1};
-                String types[] = mRLM.getTypes();
+                String types[] = mDBM.getTypes();
                 AlertDialog.Builder singleChoiceDialog =  new AlertDialog.Builder(view.getContext());
                 singleChoiceDialog.setTitle("Select a type:");
                 singleChoiceDialog.setSingleChoiceItems(types, 0, new DialogInterface.OnClickListener() {
@@ -133,7 +131,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
                                                 }
                                             }).show();
                                         }
-                                        else if(mRLM.addType(newType) == false){
+                                        else if(mDBM.addType(newType) == false){
                                             new AlertDialog.Builder(view.getContext()).setTitle("Warning!")
                                             .setMessage("The type already exists!")
                                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -232,8 +230,8 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
                     mReminder.setRepeat(mRepeat);
                     mReminder.setDate(mDate);
                     mReminder.setCheckoff(mCheckoff);
-                    mRLM.updateReminder(mReminder);
-                    if(mCheckoff){
+                    mDBM.updateReminder(mReminder);
+                    if(!mCheckoff){
                         startAlarm(mDate);
                     }
                     Toast.makeText(SingleReminderActivity.this, "Reminder has been updated", Toast.LENGTH_SHORT).show();
@@ -247,9 +245,12 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
     private void startAlarm(Date d) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, d.getTime(), pendingIntent);
+        intent.putExtra("reminder_id", mReminderId);
+        int c = mDBM.getAlarmCount();
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, c, intent, 0);
+        mDBM.updateAlarmCount(c);
+        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, d.getTime(), pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, d.getTime(), 30000L, pendingIntent);
     }
 
     @Override
@@ -275,7 +276,7 @@ public class SingleReminderActivity extends AppCompatActivity implements DateTim
                 dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mRLM.deleteReminder(mReminderId);
+                        mDBM.deleteReminder(mReminderId);
                         finish();
                     }
                 });
